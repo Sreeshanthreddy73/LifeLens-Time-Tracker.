@@ -34,6 +34,11 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
+@app.errorhandler(500)
+def internal_error(error):
+    import traceback
+    return f"<pre>{traceback.format_exc()}</pre>", 500
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
