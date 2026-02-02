@@ -96,6 +96,23 @@ document.addEventListener('DOMContentLoaded', () => {
         resetBtn.addEventListener('click', resetTimer);
     }
 
+    // --- Theme Toggle ---
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    // Check for saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+        body.classList.add('dark-mode');
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            const mode = body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('theme', mode);
+        });
+    }
+
     // --- Alert Auto-dismiss ---
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {

@@ -13,10 +13,20 @@
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
+body.dark-mode {
+    --bg-light: #0f172a;
+    --card-bg: #1e293b;
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 body {
@@ -77,6 +87,24 @@ body {
 
 .btn-logout {
     color: var(--waste) !important;
+}
+
+.theme-btn {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    margin-left: 1.5rem;
+    padding: 5px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.theme-btn:hover {
+    background-color: var(--bg-light);
 }
 
 /* Main Content */
@@ -219,6 +247,89 @@ select:focus {
 /* Dashboard */
 .dashboard-header {
     margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.streak-badge {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: var(--shadow);
+}
+
+.streak-icon {
+    font-size: 1.5rem;
+    animation: bounce 2s infinite;
+}
+
+.streak-count {
+    display: block;
+    font-weight: 700;
+    color: #9a3412;
+}
+
+.streak-label {
+    font-size: 0.75rem;
+    color: #c2410c;
+}
+
+.achievements-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+}
+
+.badge-card {
+    background: white;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 200px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+}
+
+.badge-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary);
+}
+
+.badge-icon {
+    font-size: 1.5rem;
+}
+
+.badge-text h4 {
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.badge-text p {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
 }
 
 .date-display {

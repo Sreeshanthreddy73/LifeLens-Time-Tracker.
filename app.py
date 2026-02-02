@@ -105,8 +105,25 @@ def dashboard():
     today_date = today.strftime('%B %d, %Y')
     today_val = today.strftime('%Y-%m-%d')
     
-    # Weekly Trend Logic
+    # Weekly Trend & Streak Logic
     last_7_days_data = []
+    current_streak = 0
+    
+    # Calculate Streak (Look back from today)
+    temp_date = today
+    while True:
+        has_productive = Activity.query.filter_by(
+            user_id=current_user.id, 
+            date=temp_date, 
+            category='productive'
+        ).first()
+        if has_productive:
+            current_streak += 1
+            temp_date -= timedelta(days=1)
+        else:
+            break
+
+    # Calculate Trend Data
     for i in range(6, -1, -1):
         target_date = today - timedelta(days=i)
         day_activities = Activity.query.filter_by(user_id=current_user.id, date=target_date).all()
@@ -117,6 +134,16 @@ def dashboard():
             'date': target_date.strftime('%a'),
             'score': round(score, 1)
         })
+
+    # Achievements logic
+    total_productive_min = db.session.query(func.sum(Activity.duration_minutes)).filter_by(user_id=current_user.id, category='productive').scalar() or 0
+    total_entries = Activity.query.filter_by(user_id=current_user.id).count()
+    
+    achievements = []
+    if current_streak >= 3: achievements.append({'icon': '🔥', 'title': 'Consistency King', 'desc': '3+ Day Streak'})
+    if total_productive_min >= 600: achievements.append({'icon': '🥈', 'title': 'Deep Worker', 'desc': '10hrs Productive'})
+    if total_productive_min >= 3000: achievements.append({'icon': '🥇', 'title': 'Time Lord', 'desc': '50hrs Productive'})
+    if total_entries >= 50: achievements.append({'icon': '📊', 'title': 'Data Collector', 'desc': '50 Logs Added'})
 
     # Career/Care Insight: Projected Yearly Waste
     yearly_waste_hrs = (waste_min * 365) / 60
@@ -134,7 +161,9 @@ def dashboard():
                            today_val=today_val,
                            yearly_waste_hrs=round(yearly_waste_hrs, 1),
                            total_waste_days=round(total_waste_days, 1),
-                           weekly_trend=last_7_days_data)
+                           weekly_trend=last_7_days_data,
+                           streak=current_streak,
+                           achievements=achievements)
 
 @app.route('/add_entry', methods=['POST'])
 @login_required

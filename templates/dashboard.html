@@ -2,9 +2,34 @@
 
 {% block content %}
 <div class="dashboard-header">
-    <h1>Today's Overview</h1>
-    <p class="date-display">{{ today_date }}</p>
+    <div class="header-main">
+        <h1>Today's Overview</h1>
+        <p class="date-display">{{ today_date }}</p>
+    </div>
+    {% if streak > 0 %}
+    <div class="streak-badge">
+        <span class="streak-icon">🔥</span>
+        <div class="streak-info">
+            <span class="streak-count">{{ streak }} Day Streak</span>
+            <span class="streak-label">Keep it going!</span>
+        </div>
+    </div>
+    {% endif %}
 </div>
+
+{% if achievements %}
+<div class="achievements-row">
+    {% for badge in achievements %}
+    <div class="badge-card" title="{{ badge.desc }}">
+        <span class="badge-icon">{{ badge.icon }}</span>
+        <div class="badge-text">
+            <h4>{{ badge.title }}</h4>
+            <p>{{ badge.desc }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 
 <div class="focus-mode-container">
     <div class="card focus-card">
