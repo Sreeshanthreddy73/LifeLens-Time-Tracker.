@@ -105,6 +105,23 @@ def dashboard():
     today_date = today.strftime('%B %d, %Y')
     today_val = today.strftime('%Y-%m-%d')
     
+    # Weekly Trend Logic
+    last_7_days_data = []
+    for i in range(6, -1, -1):
+        target_date = today - timedelta(days=i)
+        day_activities = Activity.query.filter_by(user_id=current_user.id, date=target_date).all()
+        day_total = sum(a.duration_minutes for a in day_activities)
+        day_prod = sum(a.duration_minutes for a in day_activities if a.category == 'productive')
+        score = (day_prod / day_total * 100) if day_total > 0 else 0
+        last_7_days_data.append({
+            'date': target_date.strftime('%a'),
+            'score': round(score, 1)
+        })
+
+    # Career/Care Insight: Projected Yearly Waste
+    yearly_waste_hrs = (waste_min * 365) / 60
+    total_waste_days = yearly_waste_hrs / 24 # Full 24-hour days
+    
     return render_template('dashboard.html', 
                            activities=activities, 
                            total_min=total_min,
@@ -114,7 +131,10 @@ def dashboard():
                            prod_percent=round(prod_percent, 1),
                            chart_data=chart_data,
                            today_date=today_date,
-                           today_val=today_val)
+                           today_val=today_val,
+                           yearly_waste_hrs=round(yearly_waste_hrs, 1),
+                           total_waste_days=round(total_waste_days, 1),
+                           weekly_trend=last_7_days_data)
 
 @app.route('/add_entry', methods=['POST'])
 @login_required

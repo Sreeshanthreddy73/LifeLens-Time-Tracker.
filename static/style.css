@@ -276,6 +276,131 @@ select:focus {
     color: var(--text-muted);
 }
 
+/* Focus Mode */
+.focus-mode-container {
+    margin-bottom: 2.5rem;
+}
+
+.focus-card {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: white;
+    text-align: center;
+    padding: 2.5rem;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.focus-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+}
+
+.focus-badge {
+    background: rgba(99, 102, 241, 0.2);
+    color: #818cf8;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+}
+
+.timer-display {
+    font-size: 5rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+}
+
+.focus-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    position: relative;
+    z-index: 10;
+}
+
+.focus-controls .btn {
+    width: auto;
+    min-width: 160px;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.btn-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
+}
+
+.session-message {
+    margin-top: 1.5rem;
+    font-weight: 500;
+    color: #94a3b8;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* Insight Card */
+.insight-card {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    text-align: center;
+    padding: 2rem;
+}
+
+.insight-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.insight-card h3 {
+    color: #9a3412;
+    margin-bottom: 0.75rem;
+}
+
+.insight-card p {
+    color: #431407;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.insight-card strong {
+    color: #ef4444;
+    font-size: 1.3rem;
+}
+
+.insight-action {
+    font-weight: 600;
+    color: #c2410c;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
 .dashboard-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
