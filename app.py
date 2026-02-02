@@ -9,10 +9,11 @@ from models import db, User, Activity
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'lifelens-secret-key-12345'
-# Use cloud DB if available, otherwise fallback to local sqlite
-db_url = os.environ.get('DATABASE_URL')
+# Robust DB detection for Vercel/Production
+db_url = os.environ.get('DATABASE_URL') or os.environ.get('POSTGRES_URL')
 if db_url and db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url or 'sqlite:///lifelens.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -20,12 +21,14 @@ db.init_app(app)
 
 @app.route('/init-db')
 def init_db():
+    uri = app.config['SQLALCHEMY_DATABASE_URI']
+    masked_uri = uri.split('@')[-1] if '@' in uri else uri
     try:
         with app.app_context():
             db.create_all()
-        return "Database tables created successfully! <a href='/'>Go to Login</a>"
+        return f"Database Success! Tables created.<br>Using: {masked_uri}<br><a href='/register'>Go to Register</a>"
     except Exception as e:
-        return f"Error creating tables: {str(e)}"
+        return f"Database Error!<br>Error: {str(e)}<br>Using URI: {masked_uri}<br>Double check your Vercel Storage settings."
 
 login_manager = LoginManager()
 login_manager.login_view = 'login'
