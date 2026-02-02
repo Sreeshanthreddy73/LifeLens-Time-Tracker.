@@ -18,18 +18,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
-# Global for debugging DB connection
-db_status = "Not initialized"
-
-@app.route('/debug-db')
-def debug_db():
-    global db_status
+@app.route('/init-db')
+def init_db():
     try:
         with app.app_context():
             db.create_all()
-        return f"DB Success! Status: {db_status}. URI: {app.config['SQLALCHEMY_DATABASE_URI'].split('@')[-1]}"
+        return "Database tables created successfully! <a href='/'>Go to Login</a>"
     except Exception as e:
-        return f"DB Error: {str(e)}"
+        return f"Error creating tables: {str(e)}"
 
 login_manager = LoginManager()
 login_manager.login_view = 'login'
