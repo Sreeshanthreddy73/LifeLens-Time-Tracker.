@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="achievements-page">
+    <div class="header-main" style="margin-bottom: 2rem;">
+        <h1>Your Achievements</h1>
+        <p>Unlock badges by staying consistent and productive!</p>
+    </div>
+
+    {% if achievements %}
+    <div class="achievements-grid"
+        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem;">
+        {% for badge in achievements %}
+        <div class="badge-card" title="{{ badge.desc }}"
+            style="display: flex; align-items: center; padding: 1.5rem; background: var(--card-bg); border-radius: 12px; box-shadow: var(--shadow-sm);">
+            <span class="badge-icon" style="font-size: 2.5rem; margin-right: 1rem;">{{ badge.icon }}</span>
+            <div class="badge-text">
+                <h4 style="margin: 0; color: var(--text-primary);">{{ badge.title }}</h4>
+                <p style="margin: 0.25rem 0 0; color: var(--text-secondary); font-size: 0.9rem;">{{ badge.desc }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state" style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+        <p>No achievements unlocked yet. Keep tracking your time!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="reports-header">
+    <h1>Productivity Reports</h1>
+    <p class="date-display">Analysis for {{ today_date }}</p>
+</div>
+
+<div class="reports-grid"
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+    {% if waste_min > 0 %}
+    <div class="card insight-card" style="grid-column: 1 / -1;">
+        <div class="insight-icon">⚠️</div>
+        <h3>Projected Yearly Cost</h3>
+        <p>At today's rate, you'll spend <strong>{{ yearly_waste_hrs }} hours</strong> ({{ total_waste_days }} full
+            days) this year on distractions.</p>
+        <div class="insight-action">Master your focus to reclaim this time!</div>
+    </div>
+    {% endif %}
+
+    <div class="card chart-card">
+        <h2>Weekly Efficiency Trend</h2>
+        <canvas id="trendChart"></canvas>
+    </div>
+
+    <div class="card chart-card">
+        <h2>Time Distribution</h2>
+        <canvas id="timeChart"></canvas>
+    </div>
+    <div class="card chart-card">
+        <h2>Category Comparison</h2>
+        <canvas id="barChart"></canvas>
+    </div>
+</div>
+
+<!-- Data for Chart.js (Hidden) -->
+<div id="chartDataContainer" data-chart='{{ chart_data|tojson }}' data-trend='{{ weekly_trend|tojson }}'
+    style="display: none;"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const dataContainer = document.getElementById('chartDataContainer');
+        if (!dataContainer) return;
+
+        const chartData = JSON.parse(dataContainer.dataset.chart);
+        const trendData = JSON.parse(dataContainer.dataset.trend);
+
+        // Trend Chart
+        const ctxTrend = document.getElementById('trendChart').getContext('2d');
+        new Chart(ctxTrend, {
+            type: 'line',
+            data: {
+                labels: trendData.map(d => d.date),
+                datasets: [{
+                    label: 'Efficiency %',
+                    data: trendData.map(d => d.score),
+                    borderColor: '#6366f1',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#6366f1',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 100 }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // Pie Chart
+        const ctxPie = document.getElementById('timeChart').getContext('2d');
+        new Chart(ctxPie, {
+            type: 'doughnut',
+            data: {
+                labels: chartData.labels,
+                datasets: [{
+                    data: chartData.values,
+                    backgroundColor: ['#10b981', '#6b7280', '#ef4444'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Bar Chart
+        const ctxBar = document.getElementById('barChart').getContext('2d');
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: chartData.labels,
+                datasets: [{
+                    label: 'Minutes',
+                    data: chartData.values,
+                    backgroundColor: ['#10b981', '#6b7280', '#ef4444'],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

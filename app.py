@@ -106,7 +106,7 @@ def login():
             login_user(user)
             return redirect(url_for('dashboard'))
         else:
-            flash('Login failed. Check email and password.', 'danger')
+            flash('Invalid email or password.', 'danger')
             
     return render_template('login.html')
 
@@ -129,21 +129,11 @@ def dashboard():
     
     prod_percent = (productive_min / total_min * 100) if total_min > 0 else 0
     
-    # Format for charts
-    chart_data = {
-        'labels': ['Productive', 'Neutral', 'Waste'],
-        'values': [productive_min, neutral_min, waste_min]
-    }
-
-    # Formatting today's date
     today_date = today.strftime('%B %d, %Y')
     today_val = today.strftime('%Y-%m-%d')
     
-    # Weekly Trend & Streak Logic
-    last_7_days_data = []
+    # Simple Streak Calc for Header (Optional)
     current_streak = 0
-    
-    # Calculate Streak (Look back from today)
     temp_date = today
     while True:
         has_productive = Activity.query.filter_by(
@@ -157,7 +147,39 @@ def dashboard():
         else:
             break
 
-    # Calculate Trend Data
+    return render_template('dashboard.html', 
+                           activities=activities, 
+                           total_min=total_min,
+                           productive_min=productive_min,
+                           neutral_min=neutral_min,
+                           waste_min=waste_min,
+                           prod_percent=round(prod_percent, 1),
+                           today_date=today_date,
+                           today_val=today_val,
+                           streak=current_streak)
+
+@app.route('/add_activity_page')
+@login_required
+def add_activity_page():
+    today = date.today()
+    today_val = today.strftime('%Y-%m-%d')
+    activities = Activity.query.filter_by(user_id=current_user.id, date=today).all()
+    return render_template('add_activity.html', today_val=today_val, activities=activities)
+
+@app.route('/reports')
+@login_required
+def reports():
+    today = date.today()
+    today_date = today.strftime('%B %d, %Y')
+    
+    # Last 7 Days Data for Distribution to make it more of a "Report"
+    last_7_days_activities = Activity.query.filter(
+        Activity.user_id == current_user.id,
+        Activity.date >= today - timedelta(days=6)
+    ).all()
+    
+    # Weekly Trend Logic
+    last_7_days_data = []
     for i in range(6, -1, -1):
         target_date = today - timedelta(days=i)
         day_activities = Activity.query.filter_by(user_id=current_user.id, date=target_date).all()
@@ -169,35 +191,58 @@ def dashboard():
             'score': round(score, 1)
         })
 
-    # Achievements logic
+    # Distribution based on Today (to match original) or 7 Days? 
+    # Let's stick to Today for now to ensure consistency with what the user expects from "moving" the charts.
+    todays_activities = Activity.query.filter_by(user_id=current_user.id, date=today).all()
+    prod_min = sum(a.duration_minutes for a in todays_activities if a.category == 'productive')
+    neutral_min = sum(a.duration_minutes for a in todays_activities if a.category == 'neutral')
+    waste_min = sum(a.duration_minutes for a in todays_activities if a.category == 'waste')
+    
+    chart_data = {
+        'labels': ['Productive', 'Neutral', 'Waste'],
+        'values': [prod_min, neutral_min, waste_min]
+    }
+    
+    # Waste Insight
+    yearly_waste_hrs = (waste_min * 365) / 60
+    total_waste_days = yearly_waste_hrs / 24
+
+    return render_template('reports.html',
+                           today_date=today_date,
+                           chart_data=chart_data,
+                           weekly_trend=last_7_days_data,
+                           waste_min=waste_min,
+                           yearly_waste_hrs=round(yearly_waste_hrs, 1),
+                           total_waste_days=round(total_waste_days, 1))
+
+@app.route('/achievements')
+@login_required
+def achievements():
+    today = date.today()
+    current_streak = 0
+    temp_date = today
+    while True:
+        has_productive = Activity.query.filter_by(
+            user_id=current_user.id, 
+            date=temp_date, 
+            category='productive'
+        ).first()
+        if has_productive:
+            current_streak += 1
+            temp_date -= timedelta(days=1)
+        else:
+            break
+            
     total_productive_min = db.session.query(func.sum(Activity.duration_minutes)).filter_by(user_id=current_user.id, category='productive').scalar() or 0
     total_entries = Activity.query.filter_by(user_id=current_user.id).count()
     
-    achievements = []
-    if current_streak >= 3: achievements.append({'icon': '🔥', 'title': 'Consistency King', 'desc': '3+ Day Streak'})
-    if total_productive_min >= 600: achievements.append({'icon': '🥈', 'title': 'Deep Worker', 'desc': '10hrs Productive'})
-    if total_productive_min >= 3000: achievements.append({'icon': '🥇', 'title': 'Time Lord', 'desc': '50hrs Productive'})
-    if total_entries >= 50: achievements.append({'icon': '📊', 'title': 'Data Collector', 'desc': '50 Logs Added'})
-
-    # Career/Care Insight: Projected Yearly Waste
-    yearly_waste_hrs = (waste_min * 365) / 60
-    total_waste_days = yearly_waste_hrs / 24 # Full 24-hour days
+    achievements_list = []
+    if current_streak >= 3: achievements_list.append({'icon': '🔥', 'title': 'Consistency King', 'desc': '3+ Day Streak'})
+    if total_productive_min >= 600: achievements_list.append({'icon': '🥈', 'title': 'Deep Worker', 'desc': '10hrs Productive'})
+    if total_productive_min >= 3000: achievements_list.append({'icon': '🥇', 'title': 'Time Lord', 'desc': '50hrs Productive'})
+    if total_entries >= 50: achievements_list.append({'icon': '📊', 'title': 'Data Collector', 'desc': '50 Logs Added'})
     
-    return render_template('dashboard.html', 
-                           activities=activities, 
-                           total_min=total_min,
-                           productive_min=productive_min,
-                           neutral_min=neutral_min,
-                           waste_min=waste_min,
-                           prod_percent=round(prod_percent, 1),
-                           chart_data=chart_data,
-                           today_date=today_date,
-                           today_val=today_val,
-                           yearly_waste_hrs=round(yearly_waste_hrs, 1),
-                           total_waste_days=round(total_waste_days, 1),
-                           weekly_trend=last_7_days_data,
-                           streak=current_streak,
-                           achievements=achievements)
+    return render_template('achievements.html', achievements=achievements_list)
 
 @app.route('/add_entry', methods=['POST'])
 @login_required
@@ -291,13 +336,21 @@ def delete_entry(id):
 @login_required
 def history():
     filter_date_str = request.args.get('date')
+    search_query = request.args.get('search')
+    
+    query = Activity.query.filter_by(user_id=current_user.id)
+    
     if filter_date_str:
         filter_date = datetime.strptime(filter_date_str, '%Y-%m-%d').date()
-        activities = Activity.query.filter_by(user_id=current_user.id, date=filter_date).all()
+        query = query.filter_by(date=filter_date)
         selected_date = filter_date
     else:
-        activities = Activity.query.filter_by(user_id=current_user.id).order_by(Activity.date.desc(), Activity.start_time.desc()).all()
         selected_date = None
+        
+    if search_query:
+        query = query.filter(Activity.name.ilike(f'%{search_query}%'))
+
+    activities = query.order_by(Activity.date.desc(), Activity.start_time.desc()).all()
 
     # Grouping logic for history overview if no specific date is selected
     daily_stats = db.session.query(

@@ -17,20 +17,7 @@
     {% endif %}
 </div>
 
-{% if achievements %}
-<div class="achievements-row">
-    {% for badge in achievements %}
-    <div class="badge-card" title="{{ badge.desc }}">
-        <span class="badge-icon">{{ badge.icon }}</span>
-        <div class="badge-text">
-            <h4>{{ badge.title }}</h4>
-            <p>{{ badge.desc }}</p>
-        </div>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-
+<!-- Focus Mode Section -->
 <div class="focus-mode-container">
     <div class="card focus-card">
         <div class="focus-header">
@@ -48,217 +35,73 @@
     </div>
 </div>
 
-<div class="stats-grid">
-    <div class="stat-card">
-        <h3>Total Time</h3>
-        <p class="stat-value">{{ (total_min / 60)|round(1) }}<span> hrs</span></p>
-    </div>
-    <div class="stat-card productive">
-        <h3>Productive</h3>
-        <p class="stat-value">{{ (productive_min / 60)|round(1) }}<span> hrs</span></p>
-    </div>
-    <div class="stat-card neutral">
-        <h3>Neutral</h3>
-        <p class="stat-value">{{ (neutral_min / 60)|round(1) }}<span> hrs</span></p>
-    </div>
-    <div class="stat-card waste">
-        <h3>Waste</h3>
-        <p class="stat-value">{{ (waste_min / 60)|round(1) }}<span> hrs</span></p>
-    </div>
-    <div class="stat-card score">
-        <h3>Efficiency Score</h3>
-        <p class="stat-value">{{ prod_percent }}<span>%</span></p>
-    </div>
-</div>
-
-<div class="dashboard-content">
-    <div class="left-panel">
-        <div class="card">
-            <h2>Track New Activity</h2>
-            <form action="{{ url_for('add_entry') }}" method="POST" class="activity-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Activity Name</label>
-                        <input type="text" name="activity_name" required placeholder="Reading, Coding, Sleeping...">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select name="category" required>
-                            <option value="productive">Productive</option>
-                            <option value="neutral">Neutral</option>
-                            <option value="waste">Waste</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Date</label>
-                        <input type="date" name="date" value="{{ today_val }}" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Start Time</label>
-                        <input type="time" name="start_time" required>
-                    </div>
-                    <div class="form-group">
-                        <label>End Time</label>
-                        <input type="time" name="end_time" required>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-success">Save Entry</button>
-            </form>
-        </div>
-
-        <div class="card">
+<!-- Main Content Grid -->
+<div class="dashboard-content" style="margin-top: 2rem;">
+    <!-- Left Column: Logs -->
+    <div class="card" style="height: fit-content;">
+        <div style="margin-bottom: 1rem;">
             <h2>Today's Log</h2>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Activity</th>
-                            <th>Category</th>
-                            <th>Time</th>
-                            <th>Duration</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for activity in activities %}
-                        <tr>
-                            <td>{{ activity.name }}</td>
-                            <td><span class="badge {{ activity.category }}">{{ activity.category|capitalize }}</span>
-                            </td>
-                            <td>{{ activity.start_time.strftime('%H:%M') }} - {{ activity.end_time.strftime('%H:%M') }}
-                            </td>
-                            <td>{{ activity.duration_minutes }} min</td>
-                            <td>
-                                <a href="{{ url_for('edit_entry', id=activity.id) }}" class="text-primary"
-                                    style="margin-right: 10px; text-decoration: none; font-size: 0.875rem;">Edit</a>
-                                <a href="{{ url_for('delete_entry', id=activity.id) }}" class="text-danger"
-                                    onclick="return confirm('Delete this entry?')">Delete</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        {% if not activities %}
-                        <tr>
-                            <td colspan="5" class="text-center">No entries yet today.</td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-            </div>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Activity</th>
+                        <th>Category</th>
+                        <th>Time</th>
+                        <th>Duration</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for activity in activities %}
+                    <tr>
+                        <td>{{ activity.name }}</td>
+                        <td><span class="badge {{ activity.category }}">{{ activity.category|capitalize }}</span>
+                        </td>
+                        <td>{{ activity.start_time.strftime('%H:%M') }} - {{ activity.end_time.strftime('%H:%M') }}
+                        </td>
+                        <td>{{ activity.duration_minutes }} min</td>
+                        <td>
+                            <a href="{{ url_for('edit_entry', id=activity.id) }}" class="text-primary"
+                                style="margin-right: 10px; text-decoration: none; font-size: 0.875rem;">Edit</a>
+                            <a href="{{ url_for('delete_entry', id=activity.id) }}" class="text-danger"
+                                onclick="return confirm('Delete this entry?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% if not activities %}
+                    <tr>
+                        <td colspan="5" class="text-center">No entries yet today.</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <div class="right-panel">
-        {% if waste_min > 0 %}
-        <div class="card insight-card">
-            <div class="insight-icon">⚠️</div>
-            <h3>Projected Yearly Cost</h3>
-            <p>At today's rate, you'll spend <strong>{{ yearly_waste_hrs }} hours</strong> ({{ total_waste_days }} full
-                days) this year on distractions.</p>
-            <div class="insight-action">Master your focus to reclaim this time!</div>
+    <!-- Right Column: Stats Grid -->
+    <div class="stats-grid" style="align-content: start; grid-template-columns: 1fr 1fr;">
+        <div class="stat-card">
+            <h3>Total Time</h3>
+            <p class="stat-value">{{ (total_min / 60)|round(1) }}<span> hrs</span></p>
         </div>
-        {% endif %}
-
-        <div class="card chart-card">
-            <h2>Weekly Efficiency Trend</h2>
-            <canvas id="trendChart"></canvas>
+        <div class="stat-card productive">
+            <h3>Productive</h3>
+            <p class="stat-value">{{ (productive_min / 60)|round(1) }}<span> hrs</span></p>
         </div>
-
-        <div class="card chart-card">
-            <h2>Time Distribution</h2>
-            <canvas id="timeChart"></canvas>
+        <div class="stat-card neutral">
+            <h3>Neutral</h3>
+            <p class="stat-value">{{ (neutral_min / 60)|round(1) }}<span> hrs</span></p>
         </div>
-        <div class="card chart-card">
-            <h2>Category Comparison</h2>
-            <canvas id="barChart"></canvas>
+        <div class="stat-card waste">
+            <h3>Waste</h3>
+            <p class="stat-value">{{ (waste_min / 60)|round(1) }}<span> hrs</span></p>
+        </div>
+        <div class="stat-card score">
+            <h3>Efficiency Score</h3>
+            <p class="stat-value">{{ prod_percent }}<span>%</span></p>
         </div>
     </div>
 </div>
-
-<!-- Data for Chart.js (Hidden) -->
-<div id="chartDataContainer" data-chart='{{ chart_data|tojson }}' data-trend='{{ weekly_trend|tojson }}'
-    style="display: none;"></div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const dataContainer = document.getElementById('chartDataContainer');
-        const chartData = JSON.parse(dataContainer.dataset.chart);
-        const trendData = JSON.parse(dataContainer.dataset.trend);
-
-        // Trend Chart
-        const ctxTrend = document.getElementById('trendChart').getContext('2d');
-        new Chart(ctxTrend, {
-            type: 'line',
-            data: {
-                labels: trendData.map(d => d.date),
-                datasets: [{
-                    label: 'Efficiency %',
-                    data: trendData.map(d => d.score),
-                    borderColor: '#6366f1',
-                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#6366f1',
-                    pointRadius: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true, max: 100 }
-                },
-                plugins: {
-                    legend: { display: false }
-                }
-            }
-        });
-
-        // Pie Chart
-        const ctxPie = document.getElementById('timeChart').getContext('2d');
-        new Chart(ctxPie, {
-            type: 'doughnut',
-            data: {
-                labels: chartData.labels,
-                datasets: [{
-                    data: chartData.values,
-                    backgroundColor: ['#10b981', '#6b7280', '#ef4444'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: 'bottom' }
-                }
-            }
-        });
-
-        // Bar Chart
-        const ctxBar = document.getElementById('barChart').getContext('2d');
-        new Chart(ctxBar, {
-            type: 'bar',
-            data: {
-                labels: chartData.labels,
-                datasets: [{
-                    label: 'Minutes',
-                    data: chartData.values,
-                    backgroundColor: ['#10b981', '#6b7280', '#ef4444'],
-                    borderRadius: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true }
-                },
-                plugins: {
-                    legend: { display: false }
-                }
-            }
-        });
-    });
-</script>
 {% endblock %}

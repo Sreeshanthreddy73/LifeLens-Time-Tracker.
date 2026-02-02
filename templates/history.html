@@ -4,7 +4,9 @@
 <div class="history-header">
     <h1>Your History</h1>
     <form action="{{ url_for('history') }}" method="GET" class="filter-form">
-        <label for="date">View specific date:</label>
+        <input type="text" name="search" placeholder="Search activity..." value="{{ request.args.get('search', '') }}"
+            style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px; margin-right: 10px;">
+        <label for="date">Date:</label>
         <input type="date" name="date" id="date" value="{{ selected_date }}">
         <button type="submit" class="btn btn-primary">Filter</button>
         <a href="{{ url_for('history') }}" class="btn btn-secondary">Clear</a>

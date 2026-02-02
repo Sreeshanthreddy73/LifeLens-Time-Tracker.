@@ -47,10 +47,11 @@ body {
 }
 
 /* Navbar */
+/* Navbar */
 .navbar {
     background-color: var(--card-bg);
     border-bottom: 1px solid var(--border);
-    padding: 1rem 0;
+    padding: 0.75rem 0;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -64,47 +65,71 @@ body {
 
 .logo {
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: 800;
     text-decoration: none;
     color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
 }
 
 .logo span {
     color: var(--primary);
 }
 
-.nav-links a {
-    text-decoration: none;
-    color: var(--text-muted);
-    margin-left: 1.5rem;
-    font-weight: 500;
-    transition: color 0.2s;
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.nav-links a:hover {
+.nav-links a:not(.logo) {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.nav-links a:not(.logo):hover {
+    background-color: var(--bg-light);
     color: var(--primary);
 }
 
-.btn-logout {
+.nav-links .btn-logout {
     color: var(--waste) !important;
+    border: 1px solid transparent;
+}
+
+.nav-links .btn-logout:hover {
+    background-color: #fef2f2;
+    /* Light red */
+    border-color: #fecaca;
 }
 
 .theme-btn {
-    background: none;
-    border: none;
-    font-size: 1.25rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 1.1rem;
     cursor: pointer;
-    margin-left: 1.5rem;
-    padding: 5px;
-    border-radius: 50%;
+    padding: 0.4rem;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
+    margin-left: 0.5rem;
+    width: 36px;
+    height: 36px;
 }
 
 .theme-btn:hover {
     background-color: var(--bg-light);
+    color: var(--text-main);
+    border-color: var(--text-muted);
 }
 
 /* Main Content */
@@ -366,6 +391,22 @@ select:focus {
 .stat-card.score {
     border-top-color: var(--primary);
     background: linear-gradient(to bottom, #ffffff, #f5f3ff);
+    color: #1e293b !important;
+}
+
+body.dark-mode .stat-card.score {
+    background: var(--card-bg);
+    color: var(--text-main) !important;
+}
+
+.stat-card.score h3,
+.stat-card.score .stat-value span {
+    color: #64748b !important;
+}
+
+body.dark-mode .stat-card.score h3,
+body.dark-mode .stat-card.score .stat-value span {
+    color: var(--text-muted) !important;
 }
 
 .stat-card h3 {
@@ -394,12 +435,98 @@ select:focus {
 
 .focus-card {
     background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    color: white;
+    color: #1e293b;
+    /* Dark text for light mode if background fails, but wait... */
+    /* The user's screenshot showed a LIGHT background.
+       If the background is truly #1e293b (dark), white text IS visible.
+       The fact that it's NOT visible means the background IS LIGHT.
+       If the background is light, we need dark text.
+       BUT the CSS says the background IS dark gradient.
+       
+       Hypothesis: The linear-gradient might be invalid or overridden?
+       Or the user is seeing a cached version?
+       
+       Actually, I will force the background to be dark in dark mode, and maybe the design calls for a light focus card in light mode?
+       If the user Wants it clear in light mode, and it looks white, I should probably make the text dark.
+       
+       Let's assume the background IS light in light mode (maybe due to some browser behavior or user edit I don't see?).
+       I will set the color to dark by default, and white in dark mode?
+       
+       Wait, if I set color to #1e293b, it will be invisible on the dark gradient.
+       
+       Let's change the background to a lighter gradient for light mode so the dark text makes sense?
+       OR keeps the dark gradient and ensure text is white.
+       
+       The USER requests "Focus mode text and timer isn't clear in light mode".
+       And the screenshot shows white text on white background.
+       
+       I will explicitely set the background to a dark color for .focus-card to ensure it's dark.
+       AND I will set the text color to white.
+       
+       Maybe the issue is that `color: white` is NOT applied?
+       It is applied in line 438: `color: white;`.
+       
+       Let's try to fix the background first. Maybe the gradient colors are variables that are resolving to white?
+       No, they are hex codes.
+       
+       Wait, look at the screenshot. The "Focus Mode" badge is visible (purple). The button is visible.
+       The background is WHITE.
+       
+       Why?
+       
+       Maybe `background: linear-gradient(...)` is being overridden by `.card` styles?
+       `.focus-card` likely has `.card` class too in the HTML?
+       `class="card focus-card"`
+       
+       In CSS:
+       .card { background: var(--card-bg); ... }
+       .focus-card { background: linear-gradient(...); ... }
+       
+       If .focus-card comes AFTER .card in CSS (which it does), it should win.
+       
+       However, if the gradient is somehow invalid...
+       
+       Let's try to Force the background color.
+       
+       Actually, if I look at the screenshot again... it looks like the user MIGHT want a Light Focus Card in Light Mode?
+       If so, I should set:
+       Light Mode:
+          Background: Light (e.g. #f3f4f6 or white)
+          Text: Dark
+       Dark Mode:
+          Background: Dark Gradient
+          Text: White
+       
+       Let's Implement THAT pattern, which is safer and likely what is happening (or desired).
+    */
+    background: var(--card-bg);
+    /* Fallback / Default */
+    color: var(--text-main);
     text-align: center;
     padding: 2.5rem;
     border: none;
     position: relative;
     overflow: hidden;
+}
+
+/* Specific styling for Dark Mode Focus Card to keep it "Premium" */
+body.dark-mode .focus-card {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: white;
+}
+
+/* Light Mode Focus Card styling */
+body:not(.dark-mode) .focus-card {
+    background: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
+    /* Light indigo gradient */
+    color: #1e293b;
+}
+
+body:not(.dark-mode) .timer-display {
+    text-shadow: none;
+    /* Remove glow on light mode */
+    color: #4338ca;
+    /* Dark indigo for timer */
 }
 
 .focus-card::before {
@@ -414,7 +541,8 @@ select:focus {
 
 .focus-badge {
     background: rgba(99, 102, 241, 0.2);
-    color: #818cf8;
+    color: #e0e7ff;
+    /* Lighter text for better contrast */
     padding: 0.4rem 1rem;
     border-radius: 999px;
     font-size: 0.75rem;

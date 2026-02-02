@@ -78,14 +78,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const startStr = startTime.getHours().toString().padStart(2, '0') + ':' + startTime.getMinutes().toString().padStart(2, '0');
             const endStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
 
-            // Auto-fill form
-            document.getElementsByName('activity_name')[0].value = 'Focus Session';
-            document.getElementsByName('category')[0].value = 'productive';
-            document.getElementsByName('start_time')[0].value = startStr;
-            document.getElementsByName('end_time')[0].value = endStr;
-
-            // Scroll to form
-            document.querySelector('.activity-form').scrollIntoView({ behavior: 'smooth' });
+            // Auto-fill form if present
+            const nameInput = document.getElementsByName('activity_name')[0];
+            if (nameInput) {
+                nameInput.value = 'Focus Session';
+                document.getElementsByName('category')[0].value = 'productive';
+                document.getElementsByName('start_time')[0].value = startStr;
+                document.getElementsByName('end_time')[0].value = endStr;
+                document.querySelector('.activity-form').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                window.location.href = '/add_activity_page';
+            }
         }
         resetTimer();
     }
