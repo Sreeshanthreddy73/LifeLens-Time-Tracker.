@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="history-header">
+    <h1>Your History</h1>
+    <form action="{{ url_for('history') }}" method="GET" class="filter-form">
+        <label for="date">View specific date:</label>
+        <input type="date" name="date" id="date" value="{{ selected_date }}">
+        <button type="submit" class="btn btn-primary">Filter</button>
+        <a href="{{ url_for('history') }}" class="btn btn-secondary">Clear</a>
+    </form>
+</div>
+
+<div class="history-content">
+    {% if selected_date %}
+    <div class="card">
+        <h2>Entries for {{ selected_date }}</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Activity</th>
+                        <th>Category</th>
+                        <th>Time</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for activity in activities %}
+                    <tr>
+                        <td>{{ activity.name }}</td>
+                        <td><span class="badge {{ activity.category }}">{{ activity.category|capitalize }}</span></td>
+                        <td>{{ activity.start_time.strftime('%H:%M') }} - {{ activity.end_time.strftime('%H:%M') }}</td>
+                        <td>{{ activity.duration_minutes }} min</td>
+                    </tr>
+                    {% endfor %}
+                    {% if not activities %}
+                    <tr>
+                        <td colspan="4" class="text-center">No entries found for this date.</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="stats-grid">
+        {% for date, total in daily_stats %}
+        <div class="stat-card">
+            <h3>{{ date }}</h3>
+            <p class="stat-value">{{ (total / 60)|round(1) }}<span> hrs</span></p>
+            <a href="{{ url_for('history', date=date) }}" class="view-link">View Details</a>
+        </div>
+        {% endfor %}
+        {% if not daily_stats %}
+        <p>No activity history found yet.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
