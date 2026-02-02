@@ -9,12 +9,22 @@ from models import db, User, Activity
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'lifelens-secret-key-12345'
+
 # Robust DB detection for Vercel/Production
 db_url = os.environ.get('DATABASE_URL') or os.environ.get('POSTGRES_URL')
-if db_url and db_url.startswith("postgres://"):
-    db_url = db_url.replace("postgres://", "postgresql://", 1)
+if db_url:
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url
+else:
+    # On Vercel, only /tmp is writable. Use it for local SQLite to avoid crashes.
+    is_vercel = os.environ.get('VERCEL') == '1'
+    if is_vercel:
+        db_path = os.path.join('/tmp', 'lifelens.db')
+        app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+    else:
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lifelens.db'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = db_url or 'sqlite:///lifelens.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
