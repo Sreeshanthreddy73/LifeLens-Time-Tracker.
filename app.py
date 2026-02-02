@@ -18,9 +18,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
-# Ensure tables are created for Vercel/Production
-with app.app_context():
-    db.create_all()
+# Global for debugging DB connection
+db_status = "Not initialized"
+
+@app.route('/debug-db')
+def debug_db():
+    global db_status
+    try:
+        with app.app_context():
+            db.create_all()
+        return f"DB Success! Status: {db_status}. URI: {app.config['SQLALCHEMY_DATABASE_URI'].split('@')[-1]}"
+    except Exception as e:
+        return f"DB Error: {str(e)}"
 
 login_manager = LoginManager()
 login_manager.login_view = 'login'
