@@ -9,7 +9,10 @@ from models import db, User, Activity
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'lifelens-secret-key-12345'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lifelens.db'
+# Use cloud DB if available, otherwise fallback to local sqlite
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///lifelens.db')
+if app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"):
+    app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
@@ -276,4 +279,4 @@ def history():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
