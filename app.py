@@ -35,8 +35,10 @@ def init_db():
     masked_uri = uri.split('@')[-1] if '@' in uri else uri
     try:
         with app.app_context():
+            # WARNING: This deletes all data! Needed to resize the password column.
+            db.drop_all()
             db.create_all()
-        return f"Database Success! Tables created.<br>Using: {masked_uri}<br><a href='/register'>Go to Register</a>"
+        return f"Database Reset Success! Tables dropped and recreated.<br>Using: {masked_uri}<br><a href='/register'>Go to Register</a>"
     except Exception as e:
         return f"Database Error!<br>Error: {str(e)}<br>Using URI: {masked_uri}<br>Double check your Vercel Storage settings."
 
