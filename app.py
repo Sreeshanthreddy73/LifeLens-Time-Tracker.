@@ -2,13 +2,19 @@ import os
 from datetime import datetime, time, date, timedelta
 from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import func
+from itsdangerous import URLSafeTimedSerializer
+from dotenv import load_dotenv
 
 from models import db, User, Activity, DiaryEntry
 
+# Load environment variables from .env file
+load_dotenv()
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'lifelens-secret-key-12345'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'lifelens-secret-key-12345'
 
 # Robust DB detection for Vercel/Production
 db_url = os.environ.get('DATABASE_URL') or os.environ.get('POSTGRES_URL')
@@ -41,6 +47,16 @@ def init_db():
         return f"Database Reset Success! Tables dropped and recreated.<br>Using: {masked_uri}<br><a href='/register'>Go to Register</a>"
     except Exception as e:
         return f"Database Error!<br>Error: {str(e)}<br>Using URI: {masked_uri}<br>Double check your Vercel Storage settings."
+
+# Email Configuration for Gmail
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME') or 'lifelenspptt@gmail.com'
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD') or ''  # Set this in environment variables
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME') or 'lifelenspptt@gmail.com'
+
+mail = Mail(app)
 
 login_manager = LoginManager()
 login_manager.login_view = 'login'
@@ -116,6 +132,104 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+# Password Reset Routes
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        user = User.query.filter_by(email=email).first()
+        
+        if user:
+            # Generate reset token
+            serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+            token = serializer.dumps(email, salt='password-reset-salt')
+            
+            # Create reset URL
+            reset_url = url_for('reset_password', token=token, _external=True)
+            
+            # Send email
+            try:
+                msg = Message(
+                    'LifeLens - Password Reset Request',
+                    recipients=[email]
+                )
+                msg.body = f'''Hello,
+
+You requested to reset your password for LifeLens.
+
+Click the link below to reset your password:
+{reset_url}
+
+This link will expire in 1 hour.
+
+If you didn't request this, please ignore this email.
+
+Best regards,
+LifeLens Team
+'''
+                msg.html = f'''
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #6366f1;">Password Reset Request</h2>
+                    <p>Hello,</p>
+                    <p>You requested to reset your password for <strong>LifeLens</strong>.</p>
+                    <p>Click the button below to reset your password:</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="{reset_url}" style="background-color: #6366f1; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
+                    </div>
+                    <p style="color: #666; font-size: 14px;">This link will expire in 1 hour.</p>
+                    <p style="color: #666; font-size: 14px;">If you didn't request this, please ignore this email.</p>
+                    <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+                    <p style="color: #999; font-size: 12px;">Best regards,<br>LifeLens Team</p>
+                </div>
+                '''
+                
+                mail.send(msg)
+                flash('Password reset link has been sent to your email.', 'success')
+            except Exception as e:
+                # If email fails, show the link (fallback for development)
+                flash(f'Email sending failed. Reset link: {reset_url}', 'warning')
+                flash('Please set up Gmail App Password in environment variables.', 'info')
+        else:
+            # Don't reveal if email exists or not (security best practice)
+            flash('If that email exists, a reset link has been sent.', 'info')
+        
+        return redirect(url_for('login'))
+    
+    return render_template('forgot_password.html')
+
+@app.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    try:
+        serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        email = serializer.loads(token, salt='password-reset-salt', max_age=3600)  # 1 hour expiry
+    except:
+        flash('The reset link is invalid or has expired.', 'danger')
+        return redirect(url_for('forgot_password'))
+    
+    if request.method == 'POST':
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        
+        if password != confirm_password:
+            flash('Passwords do not match.', 'danger')
+            return render_template('reset_password.html', token=token, email=email)
+        
+        if len(password) < 6:
+            flash('Password must be at least 6 characters.', 'danger')
+            return render_template('reset_password.html', token=token, email=email)
+        
+        user = User.query.filter_by(email=email).first()
+        if user:
+            user.password_hash = generate_password_hash(password)
+            db.session.commit()
+            flash('Password updated successfully! Please login.', 'success')
+            return redirect(url_for('login'))
+        else:
+            flash('User not found.', 'danger')
+            return redirect(url_for('forgot_password'))
+    
+    return render_template('reset_password.html', token=token, email=email)
 
 @app.route('/dashboard')
 def dashboard():
@@ -488,4 +602,5 @@ def history():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True, port=5001)
+    # host='0.0.0.0' allows access from other devices on your network
+    app.run(debug=True, host='0.0.0.0', port=5001)

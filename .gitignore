@@ -5,6 +5,11 @@ __pycache__/
 venv/
 env/
 
+# Environment Variables (IMPORTANT - Never commit!)
+.env
+.env.local
+*.env
+
 # Flask/SQLAlchemy
 instance/
 *.db
