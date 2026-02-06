@@ -10,49 +10,56 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏱️</text></svg>">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="container">
-            <a href="{{ url_for('index') }}" class="logo">Life<span>Lens</span></a>
-            <div class="nav-links">
-                {% if current_user.is_authenticated %}
-                <a href="{{ url_for('dashboard') }}">Dashboard</a>
-                <a href="{{ url_for('add_activity_page') }}">Add Activity</a>
-                <a href="{{ url_for('diary') }}">Diary</a>
-                <a href="{{ url_for('reports') }}">Reports</a>
-                <a href="{{ url_for('achievements') }}">Achievements</a>
-                <a href="{{ url_for('history') }}">History</a>
-                <button id="themeToggle" class="theme-btn" title="Toggle Dark/Light Mode">🌓</button>
-                <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
-                {% else %}
-                <a href="{{ url_for('login') }}">Login</a>
-                <a href="{{ url_for('register') }}">Register</a>
-                {% endif %}
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <a href="{{ url_for('index') }}" class="logo">
+                    <img src="{{ url_for('static', filename='logo.svg') }}" alt="LifeLens Logo" class="logo-icon">
+                    <span class="logo-text">Life<span>Lens</span></span>
+                </a>
+                <div class="nav-links">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                    <a href="{{ url_for('add_activity') }}">Add Activity</a>
+                    <a href="{{ url_for('diary') }}">Diary</a>
+                    <a href="{{ url_for('reports') }}">Reports</a>
+                    <a href="{{ url_for('achievements') }}">Achievements</a>
+                    <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+                    {% else %}
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('register') }}">Register</a>
+                    {% endif %}
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
     <main class="container">
-        {% block flash_messages %}
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         {% for category, message in messages %}
-        <div class="alert alert-{{ category }}">{{ message }}</div>
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+            <button class="alert-close" onclick="this.parentElement.remove()">×</button>
+        </div>
         {% endfor %}
         {% endif %}
         {% endwith %}
-        {% endblock %}
 
         {% block content %}{% endblock %}
     </main>
 
     <footer>
         <div class="container">
-            <p>&copy; 2024 LifeLens. Master your time.</p>
+            <p>&copy; 2026 LifeLens. Master your time.</p>
             <div class="footer-links">
                 <a href="{{ url_for('about') }}">About Us</a>
                 <span>•</span>

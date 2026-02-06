@@ -20,7 +20,7 @@
                         <div class="method-icon">📧</div>
                         <div class="method-details">
                             <h3>Email Us</h3>
-                            <p><a href="mailto:support@lifelens.app">support@lifelens.app</a></p>
+                            <p><a href="mailto:lifelenspptt@gmail.com">lifelenspptt@gmail.com</a></p>
                             <small>We typically respond within 24-48 hours</small>
                         </div>
                     </div>
@@ -29,7 +29,7 @@
                         <div class="method-icon">💬</div>
                         <div class="method-details">
                             <h3>General Inquiries</h3>
-                            <p><a href="mailto:hello@lifelens.app">hello@lifelens.app</a></p>
+                            <p><a href="mailto:lifelenspptt@gmail.com">lifelenspptt@gmail.com</a></p>
                             <small>For general questions and feedback</small>
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                         <div class="method-icon">🔒</div>
                         <div class="method-details">
                             <h3>Privacy & Legal</h3>
-                            <p><a href="mailto:privacy@lifelens.app">privacy@lifelens.app</a></p>
+                            <p><a href="mailto:lifelenspptt@gmail.com">lifelenspptt@gmail.com</a></p>
                             <small>For privacy concerns and legal matters</small>
                         </div>
                     </div>
@@ -47,7 +47,7 @@
                         <div class="method-icon">🐛</div>
                         <div class="method-details">
                             <h3>Report a Bug</h3>
-                            <p><a href="mailto:bugs@lifelens.app">bugs@lifelens.app</a></p>
+                            <p><a href="mailto:lifelenspptt@gmail.com">lifelenspptt@gmail.com</a></p>
                             <small>Help us improve by reporting issues</small>
                         </div>
                     </div>
@@ -121,12 +121,13 @@
                     <span>🐦</span>
                     <p>Follow us on Twitter (Coming Soon)</p>
                 </div>
-                <div class="social-placeholder">
-                    <span>💼</span>
-                    <p>Connect on LinkedIn (Coming Soon)</p>
-                </div>
-                <div class="social-placeholder">
+                <a href="https://instagram.com/lifelens_pptt" target="_blank" rel="noopener noreferrer"
+                    class="social-link">
                     <span>📱</span>
+                    <p>Follow us on Instagram<br><strong>@lifelens_pptt</strong></p>
+                </a>
+                <div class="social-placeholder">
+                    <span>💬</span>
                     <p>Join our Discord (Coming Soon)</p>
                 </div>
             </div>
@@ -376,6 +377,42 @@
         margin: 0;
         font-size: 0.9rem;
         color: var(--text-muted);
+    }
+
+    /* Active Social Link */
+    .social-link {
+        padding: 2rem;
+        background: linear-gradient(135deg, #f5f3ff 0%, #e0e7ff 100%);
+        border-radius: 12px;
+        text-decoration: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: block;
+    }
+
+    body.dark-mode .social-link {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+    }
+
+    .social-link:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    }
+
+    .social-link span {
+        font-size: 2.5rem;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .social-link p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--text-main);
+    }
+
+    .social-link strong {
+        color: var(--primary);
+        font-size: 1rem;
     }
 
     /* Responsive */

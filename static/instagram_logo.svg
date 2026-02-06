@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="instagramGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Shadow Filter -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+      <feOffset dx="0" dy="5" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background Circle (white) -->
+  <circle cx="540" cy="540" r="520" fill="white"/>
+  
+  <!-- Main Logo Group with Shadow -->
+  <g filter="url(#shadow)">
+    <!-- Outer Circle (Lens) -->
+    <circle cx="540" cy="540" r="400" fill="none" stroke="url(#instagramGradient)" stroke-width="35"/>
+    
+    <!-- Inner Circle -->
+    <circle cx="540" cy="540" r="310" fill="none" stroke="url(#instagramGradient)" stroke-width="20" opacity="0.5"/>
+    
+    <!-- Clock Hands -->
+    <!-- Hour Hand (pointing up) -->
+    <line x1="540" y1="540" x2="540" y2="280" stroke="url(#instagramGradient)" stroke-width="28" stroke-linecap="round"/>
+    
+    <!-- Minute Hand (pointing to 2 o'clock) -->
+    <line x1="540" y1="540" x2="680" y2="360" stroke="url(#instagramGradient)" stroke-width="24" stroke-linecap="round"/>
+    
+    <!-- Center Dot -->
+    <circle cx="540" cy="540" r="35" fill="url(#instagramGradient)"/>
+    
+    <!-- Time Markers (12, 3, 6, 9 positions) -->
+    <circle cx="540" cy="140" r="18" fill="url(#instagramGradient)"/>
+    <circle cx="940" cy="540" r="18" fill="url(#instagramGradient)"/>
+    <circle cx="540" cy="940" r="18" fill="url(#instagramGradient)"/>
+    <circle cx="140" cy="540" r="18" fill="url(#instagramGradient)"/>
+  </g>
+</svg>
