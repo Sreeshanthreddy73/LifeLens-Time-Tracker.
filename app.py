@@ -71,6 +71,11 @@ def internal_error(error):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# Serve ads.txt for AdSense
+@app.route('/ads.txt')
+def ads_txt():
+    return app.send_static_file('ads.txt')
+
 # --- Helper Functions ---
 def calculate_minutes(start, end):
     start_dt = datetime.combine(date.today(), start)
