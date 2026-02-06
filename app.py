@@ -5,7 +5,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import func
 
-from models import db, User, Activity
+from models import db, User, Activity, DiaryEntry
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'lifelens-secret-key-12345'
@@ -71,7 +71,8 @@ def calculate_minutes(start, end):
 def index():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
-    return redirect(url_for('login'))
+    # Show landing page for non-authenticated users
+    return render_template('landing.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -117,8 +118,23 @@ def logout():
     return redirect(url_for('login'))
 
 @app.route('/dashboard')
-@login_required
 def dashboard():
+    # Public dashboard - anyone can view, but must login to interact
+    if not current_user.is_authenticated:
+        # Show demo/public view
+        return render_template('dashboard.html', 
+                               activities=[], 
+                               total_min=0,
+                               productive_min=0,
+                               neutral_min=0,
+                               waste_min=0,
+                               prod_percent=0,
+                               today_date=date.today().strftime('%B %d, %Y'),
+                               today_val=date.today().strftime('%Y-%m-%d'),
+                               streak=0,
+                               is_public=True)
+    
+    # Authenticated user view
     today = date.today()
     activities = Activity.query.filter_by(user_id=current_user.id, date=today).all()
     
@@ -146,6 +162,11 @@ def dashboard():
             temp_date -= timedelta(days=1)
         else:
             break
+    
+    # Update last activity date
+    if activities:
+        current_user.last_activity_date = today
+        db.session.commit()
 
     return render_template('dashboard.html', 
                            activities=activities, 
@@ -156,7 +177,8 @@ def dashboard():
                            prod_percent=round(prod_percent, 1),
                            today_date=today_date,
                            today_val=today_val,
-                           streak=current_streak)
+                           streak=current_streak,
+                           is_public=False)
 
 @app.route('/add_activity_page')
 @login_required
@@ -331,6 +353,89 @@ def delete_entry(id):
     db.session.commit()
     flash('Entry deleted.', 'info')
     return redirect(url_for('dashboard'))
+
+@app.route('/diary')
+@login_required
+def diary():
+    today = date.today()
+    # Get today's diary entry if exists
+    today_entry = DiaryEntry.query.filter_by(user_id=current_user.id, date=today).first()
+    
+    # Get recent diary entries (last 7 days)
+    recent_entries = DiaryEntry.query.filter(
+        DiaryEntry.user_id == current_user.id,
+        DiaryEntry.date >= today - timedelta(days=6)
+    ).order_by(DiaryEntry.date.desc()).all()
+    
+    return render_template('diary.html', 
+                          today_entry=today_entry, 
+                          recent_entries=recent_entries,
+                          today_date=today.strftime('%B %d, %Y'),
+                          today_val=today.strftime('%Y-%m-%d'))
+
+@app.route('/save_diary', methods=['POST'])
+@login_required
+def save_diary():
+    content = request.form.get('content')
+    entry_date_str = request.form.get('date')
+    
+    if not content or not entry_date_str:
+        flash('Content and date are required.', 'warning')
+        return redirect(url_for('diary'))
+    
+    entry_date = datetime.strptime(entry_date_str, '%Y-%m-%d').date()
+    
+    # Check if entry exists for this date
+    existing_entry = DiaryEntry.query.filter_by(user_id=current_user.id, date=entry_date).first()
+    
+    if existing_entry:
+        existing_entry.content = content
+        existing_entry.updated_at = datetime.utcnow()
+        flash('Diary updated successfully!', 'success')
+    else:
+        new_entry = DiaryEntry(
+            user_id=current_user.id,
+            date=entry_date,
+            content=content
+        )
+        db.session.add(new_entry)
+        flash('Diary entry saved!', 'success')
+    
+    db.session.commit()
+    return redirect(url_for('diary'))
+
+@app.route('/api/check_streak_status')
+@login_required
+def check_streak_status():
+    """API endpoint to check if user needs to log activity to maintain streak"""
+    from flask import jsonify
+    
+    today = date.today()
+    
+    # Check if user has logged any activity today
+    today_activities = Activity.query.filter_by(user_id=current_user.id, date=today).first()
+    
+    # Check if user has written diary today
+    today_diary = DiaryEntry.query.filter_by(user_id=current_user.id, date=today).first()
+    
+    has_activity_today = today_activities is not None
+    has_diary_today = today_diary is not None
+    
+    # Calculate time until end of day
+    now = datetime.now()
+    end_of_day = datetime.combine(today, time(23, 59, 59))
+    time_remaining = end_of_day - now
+    
+    hours_remaining = int(time_remaining.total_seconds() // 3600)
+    minutes_remaining = int((time_remaining.total_seconds() % 3600) // 60)
+    
+    return jsonify({
+        'has_activity': has_activity_today,
+        'has_diary': has_diary_today,
+        'hours_remaining': hours_remaining,
+        'minutes_remaining': minutes_remaining,
+        'needs_notification': not (has_activity_today and has_diary_today)
+    })
 
 @app.route('/history')
 @login_required

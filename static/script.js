@@ -125,4 +125,68 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => alert.remove(), 500);
         }, 5000);
     });
+
+    // --- Streak Notification System ---
+    function checkStreakStatus() {
+        // Only check if user is authenticated (check if logout button exists)
+        const logoutBtn = document.querySelector('.btn-logout');
+        if (!logoutBtn) return;
+
+        fetch('/api/check_streak_status')
+            .then(response => response.json())
+            .then(data => {
+                if (data.needs_notification) {
+                    showStreakNotification(data);
+                }
+            })
+            .catch(err => console.log('Streak check failed:', err));
+    }
+
+    function showStreakNotification(data) {
+        // Don't show if already dismissed today
+        const dismissedToday = localStorage.getItem('streak_notification_dismissed');
+        const today = new Date().toDateString();
+        if (dismissedToday === today) return;
+
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = 'streak-notification';
+
+        let message = '';
+        if (!data.has_activity && !data.has_diary) {
+            message = `⚠️ Your streak will end in ${data.hours_remaining}h ${data.minutes_remaining}m! Log an activity and write in your diary today.`;
+        } else if (!data.has_activity) {
+            message = `⚠️ Your streak will end in ${data.hours_remaining}h ${data.minutes_remaining}m! Log an activity today.`;
+        } else if (!data.has_diary) {
+            message = `📔 Don't forget to write in your diary! ${data.hours_remaining}h ${data.minutes_remaining}m remaining today.`;
+        }
+
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span>${message}</span>
+                <button class="notification-close" onclick="this.parentElement.parentElement.remove(); localStorage.setItem('streak_notification_dismissed', '${today}');">✕</button>
+            </div>
+        `;
+
+        document.body.appendChild(notification);
+
+        // Auto-dismiss after 10 seconds
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            setTimeout(() => notification.remove(), 500);
+        }, 10000);
+    }
+
+    // Check streak status on page load and every 30 minutes
+    checkStreakStatus();
+    setInterval(checkStreakStatus, 30 * 60 * 1000); // 30 minutes
+
+    // Show notification more frequently in the last 2 hours of the day
+    const now = new Date();
+    const currentHour = now.getHours();
+    if (currentHour >= 22) {
+        // Check every 5 minutes in the last 2 hours
+        setInterval(checkStreakStatus, 5 * 60 * 1000);
+    }
 });
+

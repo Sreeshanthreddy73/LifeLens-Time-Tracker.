@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if is_public %}
+<!-- Public View Banner -->
+<div class="public-banner">
+    <div class="banner-content">
+        <h2>👋 Welcome to LifeLens!</h2>
+        <p>This is a demo view. <a href="{{ url_for('login') }}" class="banner-link">Login</a> or <a
+                href="{{ url_for('register') }}" class="banner-link">Register</a> to start tracking your productivity!
+        </p>
+    </div>
+</div>
+{% endif %}
+
 <div class="dashboard-header">
     <div class="header-main">
         <h1>Today's Overview</h1>

@@ -1,0 +1,463 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Master Your Time with <span class="gradient-text">LifeLens</span></h1>
+        <p class="hero-subtitle">Track your productivity, maintain streaks, and achieve your goals with our
+            comprehensive time tracking platform</p>
+        <div class="hero-cta">
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-large">Get Started Free</a>
+            <a href="{{ url_for('login') }}" class="btn btn-secondary btn-large">Login</a>
+        </div>
+    </div>
+</div>
+
+<!-- Features Grid -->
+<div class="features-section">
+    <h2 class="section-title">Everything You Need to Stay Productive</h2>
+
+    <div class="features-grid">
+        <!-- Feature 1: Dashboard -->
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Real-Time Dashboard</h3>
+            <p>Track your daily activities with a beautiful, intuitive dashboard showing productive, neutral, and waste
+                time</p>
+            <div class="feature-preview">
+                <div class="mini-stats">
+                    <div class="mini-stat productive">
+                        <span class="mini-label">Productive</span>
+                        <span class="mini-value">5.2 hrs</span>
+                    </div>
+                    <div class="mini-stat neutral">
+                        <span class="mini-label">Neutral</span>
+                        <span class="mini-value">2.1 hrs</span>
+                    </div>
+                    <div class="mini-stat waste">
+                        <span class="mini-label">Waste</span>
+                        <span class="mini-value">0.8 hrs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 2: Diary -->
+        <div class="feature-card">
+            <div class="feature-icon">📔</div>
+            <h3>Daily Diary</h3>
+            <p>Write daily journal entries to reflect on your day, track your thoughts, and maintain your streak</p>
+            <div class="feature-preview">
+                <div class="diary-preview">
+                    <div class="diary-line"></div>
+                    <div class="diary-line short"></div>
+                    <div class="diary-line"></div>
+                    <div class="diary-line medium"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 3: Focus Mode -->
+        <div class="feature-card">
+            <div class="feature-icon">⏱️</div>
+            <h3>Focus Mode Timer</h3>
+            <p>Built-in Pomodoro timer to help you stay focused and automatically log your productive sessions</p>
+            <div class="feature-preview">
+                <div class="timer-preview">25:00</div>
+            </div>
+        </div>
+
+        <!-- Feature 4: Streak Notifications -->
+        <div class="feature-card">
+            <div class="feature-icon">🔥</div>
+            <h3>Streak Notifications</h3>
+            <p>Get reminded to log activities and write in your diary to maintain your streak. Never miss a day!</p>
+            <div class="feature-preview">
+                <div class="notification-preview">
+                    ⚠️ Streak ends in 2h 30m!
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 5: Reports -->
+        <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3>Detailed Reports</h3>
+            <p>Visualize your productivity trends with charts and insights. See how you're improving over time</p>
+            <div class="feature-preview">
+                <div class="chart-preview">
+                    <div class="bar" style="height: 60%"></div>
+                    <div class="bar" style="height: 80%"></div>
+                    <div class="bar" style="height: 70%"></div>
+                    <div class="bar" style="height: 90%"></div>
+                    <div class="bar" style="height: 85%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 6: Achievements -->
+        <div class="feature-card">
+            <div class="feature-icon">🏆</div>
+            <h3>Achievements & Badges</h3>
+            <p>Unlock achievements as you hit milestones. Stay motivated with gamification elements</p>
+            <div class="feature-preview">
+                <div class="badges-preview">
+                    <span class="mini-badge">🔥 3-Day Streak</span>
+                    <span class="mini-badge">🥇 Time Lord</span>
+                    <span class="mini-badge">📊 Data Collector</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works -->
+<div class="how-it-works">
+    <h2 class="section-title">How It Works</h2>
+    <div class="steps-grid">
+        <div class="step-card">
+            <div class="step-number">1</div>
+            <h3>Sign Up</h3>
+            <p>Create your free account in seconds</p>
+        </div>
+        <div class="step-card">
+            <div class="step-number">2</div>
+            <h3>Log Activities</h3>
+            <p>Track your daily activities and categorize them</p>
+        </div>
+        <div class="step-card">
+            <div class="step-number">3</div>
+            <h3>Write Daily</h3>
+            <p>Maintain your diary to reflect and grow</p>
+        </div>
+        <div class="step-card">
+            <div class="step-number">4</div>
+            <h3>Improve</h3>
+            <p>Analyze reports and optimize your time</p>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="cta-section">
+    <h2>Ready to Transform Your Productivity?</h2>
+    <p>Join thousands of users who are mastering their time with LifeLens</p>
+    <a href="{{ url_for('register') }}" class="btn btn-primary btn-large">Start Tracking Now</a>
+</div>
+
+<style>
+    /* Hero Section */
+    .hero-section {
+        text-align: center;
+        padding: 4rem 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 24px;
+        margin-bottom: 4rem;
+    }
+
+    .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        line-height: 1.2;
+    }
+
+    .gradient-text {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero-subtitle {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
+    }
+
+    .hero-cta {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-large {
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+    }
+
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 2px solid white;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Features Section */
+    .features-section {
+        margin-bottom: 4rem;
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+        color: var(--text-main);
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .feature-card {
+        background: var(--card-bg);
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: var(--shadow-lg);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--text-main);
+    }
+
+    .feature-card p {
+        color: var(--text-muted);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .feature-preview {
+        background: var(--bg-light);
+        padding: 1.5rem;
+        border-radius: 12px;
+        min-height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Mini Stats Preview */
+    .mini-stats {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .mini-stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        min-width: 80px;
+    }
+
+    .mini-stat.productive {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .mini-stat.neutral {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .mini-stat.waste {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .mini-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .mini-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    /* Diary Preview */
+    .diary-preview {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .diary-line {
+        height: 8px;
+        background: var(--border);
+        border-radius: 4px;
+        width: 100%;
+    }
+
+    .diary-line.short {
+        width: 60%;
+    }
+
+    .diary-line.medium {
+        width: 80%;
+    }
+
+    /* Timer Preview */
+    .timer-preview {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Notification Preview */
+    .notification-preview {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        padding: 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        color: #92400e;
+        border: 2px solid #f59e0b;
+    }
+
+    /* Chart Preview */
+    .chart-preview {
+        display: flex;
+        align-items: flex-end;
+        gap: 0.5rem;
+        height: 80px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .bar {
+        width: 20px;
+        background: var(--primary);
+        border-radius: 4px 4px 0 0;
+    }
+
+    /* Badges Preview */
+    .badges-preview {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .mini-badge {
+        background: var(--bg-light);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    /* How It Works */
+    .how-it-works {
+        margin-bottom: 4rem;
+    }
+
+    .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+    }
+
+    .step-card {
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .step-number {
+        width: 60px;
+        height: 60px;
+        background: var(--primary);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 auto 1rem;
+    }
+
+    .step-card h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-main);
+    }
+
+    .step-card p {
+        color: var(--text-muted);
+    }
+
+    /* CTA Section */
+    .cta-section {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--card-bg);
+        border-radius: 24px;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .cta-section h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: var(--text-main);
+    }
+
+    .cta-section p {
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        margin-bottom: 2rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+        }
+
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}

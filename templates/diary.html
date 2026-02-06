@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div class="header-main">
+        <h1>📔 Daily Diary</h1>
+        <p class="date-display">{{ today_date }}</p>
+    </div>
+</div>
+
+<div class="diary-container">
+    <!-- Today's Diary Entry -->
+    <div class="card diary-editor">
+        <h2>Today's Entry</h2>
+        <form action="{{ url_for('save_diary') }}" method="POST">
+            <input type="hidden" name="date" value="{{ today_val }}">
+            <div class="form-group">
+                <label for="content">How was your day?</label>
+                <textarea name="content" id="content" rows="12"
+                    placeholder="Write about your day, thoughts, achievements, challenges, or anything on your mind..."
+                    required>{% if today_entry %}{{ today_entry.content }}{% endif %}</textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    {% if today_entry %}Update Entry{% else %}Save Entry{% endif %}
+                </button>
+                <span class="save-hint">💡 Writing daily helps maintain your streak!</span>
+            </div>
+        </form>
+    </div>
+
+    <!-- Recent Entries -->
+    <div class="card recent-entries">
+        <h2>Recent Entries</h2>
+        {% if recent_entries %}
+        <div class="entries-list">
+            {% for entry in recent_entries %}
+            <div class="entry-item">
+                <div class="entry-header">
+                    <span class="entry-date">{{ entry.date.strftime('%B %d, %Y') }}</span>
+                    {% if entry.date == today_val|string|slice(0,10) %}
+                    <span class="badge productive">Today</span>
+                    {% endif %}
+                </div>
+                <div class="entry-preview">
+                    {{ entry.content[:150] }}{% if entry.content|length > 150 %}...{% endif %}
+                </div>
+                {% if entry.updated_at != entry.created_at %}
+                <div class="entry-meta">
+                    <small>Last updated: {{ entry.updated_at.strftime('%I:%M %p') }}</small>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-center" style="color: var(--text-secondary); padding: 2rem;">
+            No diary entries yet. Start writing today!
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .diary-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .diary-editor textarea {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        line-height: 1.6;
+        resize: vertical;
+        background: var(--card-bg);
+        color: var(--text-primary);
+        transition: border-color 0.3s ease;
+    }
+
+    .diary-editor textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+
+    .form-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .save-hint {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+
+    .recent-entries {
+        max-height: 600px;
+        overflow-y: auto;
+    }
+
+    .entries-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .entry-item {
+        padding: 1rem;
+        background: var(--bg-secondary);
+        border-radius: 8px;
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .entry-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .entry-date {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.875rem;
+    }
+
+    .entry-preview {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .entry-meta {
+        margin-top: 0.5rem;
+        color: var(--text-tertiary);
+    }
+
+    @media (max-width: 768px) {
+        .diary-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
