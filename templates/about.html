@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="about-page">
+    <div class="about-hero">
+        <h1>About LifeLens</h1>
+        <p class="tagline">Empowering you to master your time and achieve your goals</p>
+    </div>
+
+    <div class="about-content">
+        <section class="about-section">
+            <div class="section-icon">🎯</div>
+            <h2>What is LifeLens?</h2>
+            <p>LifeLens is a comprehensive personal productivity tracking platform designed to help you understand how
+                you spend your time and make meaningful improvements. We combine activity tracking, daily journaling,
+                focus timers, and insightful analytics to give you a complete picture of your productivity journey.</p>
+            <p>Unlike simple to-do lists or basic time trackers, LifeLens provides deep insights into your habits, helps
+                you maintain consistency through streak tracking, and motivates you with achievements as you progress
+                toward your goals.</p>
+        </section>
+
+        <section class="about-section">
+            <div class="section-icon">👥</div>
+            <h2>Who is LifeLens For?</h2>
+            <div class="audience-grid">
+                <div class="audience-card">
+                    <h3>🎓 Students</h3>
+                    <p>Track study sessions, manage assignments, and build consistent learning habits. Perfect for
+                        balancing academics with personal life.</p>
+                </div>
+                <div class="audience-card">
+                    <h3>💼 Professionals</h3>
+                    <p>Optimize work hours, identify time wasters, and improve work-life balance. Ideal for remote
+                        workers and busy professionals.</p>
+                </div>
+                <div class="audience-card">
+                    <h3>🚀 Entrepreneurs</h3>
+                    <p>Maximize productivity, track project time, and ensure you're focusing on high-impact activities
+                        that grow your business.</p>
+                </div>
+                <div class="audience-card">
+                    <h3>🎨 Creatives</h3>
+                    <p>Monitor creative sessions, maintain flow states with focus mode, and reflect on your creative
+                        process through journaling.</p>
+                </div>
+                <div class="audience-card">
+                    <h3>🏃 Goal Seekers</h3>
+                    <p>Anyone committed to personal growth, building better habits, and achieving their goals through
+                        consistent effort.</p>
+                </div>
+                <div class="audience-card">
+                    <h3>📊 Data Enthusiasts</h3>
+                    <p>Love tracking metrics and analyzing patterns? LifeLens provides detailed reports and insights
+                        into your productivity.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section">
+            <div class="section-icon">🎯</div>
+            <h2>Our Mission</h2>
+            <p>Our goal is simple: <strong>help you make the most of your time</strong>. We believe that awareness is
+                the first step to improvement. By tracking how you spend your time and reflecting on your days, you can
+                identify patterns, eliminate waste, and focus on what truly matters.</p>
+            <p>We're committed to providing a free, accessible tool that anyone can use to improve their productivity
+                and achieve their goals. Whether you want to build better habits, increase focus, or simply understand
+                where your time goes, LifeLens is here to support your journey.</p>
+        </section>
+
+        <section class="about-section">
+            <div class="section-icon">✨</div>
+            <h2>Why LifeLens?</h2>
+            <div class="features-list">
+                <div class="feature-item">
+                    <span class="feature-icon">🆓</span>
+                    <div>
+                        <h3>Completely Free</h3>
+                        <p>No hidden costs, no premium tiers. All features available to everyone.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🔒</span>
+                    <div>
+                        <h3>Privacy First</h3>
+                        <p>Your data is yours. We never share or sell your personal information.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📱</span>
+                    <div>
+                        <h3>Works Everywhere</h3>
+                        <p>Access from any device - desktop, tablet, or mobile.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🎨</span>
+                    <div>
+                        <h3>Beautiful Design</h3>
+                        <p>Clean, modern interface with dark mode support.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    <div>
+                        <h3>Actionable Insights</h3>
+                        <p>Detailed reports and analytics to help you improve.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🔥</span>
+                    <div>
+                        <h3>Stay Motivated</h3>
+                        <p>Streaks, achievements, and notifications keep you on track.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section cta-section">
+            <h2>Ready to Start Your Productivity Journey?</h2>
+            <p>Join thousands of users who are already mastering their time with LifeLens.</p>
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-large">Get Started Free</a>
+        </section>
+    </div>
+</div>
+
+<style>
+    .about-page {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .about-hero {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 24px;
+        margin-bottom: 3rem;
+    }
+
+    .about-hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .tagline {
+        font-size: 1.25rem;
+        opacity: 0.95;
+    }
+
+    .about-content {
+        padding: 0 1rem;
+    }
+
+    .about-section {
+        background: var(--card-bg);
+        padding: 3rem;
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+    }
+
+    .section-icon {
+        font-size: 3rem;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .about-section h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        color: var(--text-main);
+        text-align: center;
+    }
+
+    .about-section p {
+        line-height: 1.8;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+        font-size: 1.05rem;
+    }
+
+    .about-section strong {
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    /* Audience Grid */
+    .audience-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .audience-card {
+        background: var(--bg-light);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-left: 4px solid var(--primary);
+    }
+
+    .audience-card h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+        color: var(--text-main);
+    }
+
+    .audience-card p {
+        font-size: 0.95rem;
+        margin: 0;
+    }
+
+    /* Features List */
+    .features-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .feature-icon {
+        font-size: 2rem;
+        flex-shrink: 0;
+    }
+
+    .feature-item h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.25rem;
+        color: var(--text-main);
+    }
+
+    .feature-item p {
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        text-align: center;
+        background: linear-gradient(135deg, #f5f3ff 0%, #e0e7ff 100%);
+    }
+
+    body.dark-mode .cta-section {
+        background: var(--card-bg);
+    }
+
+    .cta-section h2 {
+        margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+    }
+
+    .btn-large {
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .about-hero h1 {
+            font-size: 2rem;
+        }
+
+        .tagline {
+            font-size: 1rem;
+        }
+
+        .about-section {
+            padding: 2rem 1.5rem;
+        }
+
+        .audience-grid,
+        .features-list {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}

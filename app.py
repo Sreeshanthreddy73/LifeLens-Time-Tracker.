@@ -447,6 +447,16 @@ def terms():
     """Terms of Service page"""
     return render_template('terms.html')
 
+@app.route('/about')
+def about():
+    """About Us page"""
+    return render_template('about.html')
+
+@app.route('/contact')
+def contact():
+    """Contact Us page"""
+    return render_template('contact.html')
+
 @app.route('/history')
 @login_required
 def history():
