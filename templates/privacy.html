@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="legal-page">
+    <h1>Privacy Policy</h1>
+    <p class="last-updated">Last Updated: February 6, 2026</p>
+
+    <div class="legal-content">
+        <section>
+            <h2>1. Introduction</h2>
+            <p>Welcome to LifeLens ("we," "our," or "us"). We are committed to protecting your personal information and
+                your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your
+                information when you use our productivity tracking application.</p>
+            <p>By using LifeLens, you agree to the collection and use of information in accordance with this policy. If
+                you do not agree with our policies and practices, please do not use our service.</p>
+        </section>
+
+        <section>
+            <h2>2. Information We Collect</h2>
+            <h3>2.1 Personal Information</h3>
+            <p>When you register for an account, we collect:</p>
+            <ul>
+                <li>Username</li>
+                <li>Email address</li>
+                <li>Password (encrypted and hashed)</li>
+            </ul>
+
+            <h3>2.2 Activity Data</h3>
+            <p>When you use our service, we collect:</p>
+            <ul>
+                <li>Activity logs (name, category, date, time, duration)</li>
+                <li>Diary entries and journal content</li>
+                <li>Productivity statistics and reports</li>
+                <li>Achievement and streak data</li>
+            </ul>
+
+            <h3>2.3 Automatically Collected Information</h3>
+            <p>We may automatically collect certain information when you visit our service:</p>
+            <ul>
+                <li>Browser type and version</li>
+                <li>Device information</li>
+                <li>IP address</li>
+                <li>Usage patterns and preferences</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>3. How We Use Your Information</h2>
+            <p>We use the information we collect to:</p>
+            <ul>
+                <li>Provide, operate, and maintain our service</li>
+                <li>Improve and personalize your experience</li>
+                <li>Generate productivity reports and insights</li>
+                <li>Send you notifications about your streaks and activities</li>
+                <li>Communicate with you about updates and features</li>
+                <li>Detect and prevent fraud or abuse</li>
+                <li>Comply with legal obligations</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>4. Data Security</h2>
+            <p>We implement appropriate technical and organizational security measures to protect your personal
+                information:</p>
+            <ul>
+                <li>Passwords are hashed using industry-standard encryption</li>
+                <li>Data is transmitted over secure HTTPS connections</li>
+                <li>Regular security audits and updates</li>
+                <li>Access controls and authentication mechanisms</li>
+            </ul>
+            <p>However, no method of transmission over the Internet is 100% secure. While we strive to protect your
+                personal information, we cannot guarantee its absolute security.</p>
+        </section>
+
+        <section>
+            <h2>5. Data Sharing and Disclosure</h2>
+            <p>We do not sell, trade, or rent your personal information to third parties. We may share your information
+                only in the following circumstances:</p>
+            <ul>
+                <li><strong>With your consent:</strong> When you explicitly agree to share your information</li>
+                <li><strong>Legal requirements:</strong> When required by law, court order, or government regulation
+                </li>
+                <li><strong>Service providers:</strong> With trusted third parties who assist in operating our service
+                    (e.g., hosting providers), under strict confidentiality agreements</li>
+                <li><strong>Business transfers:</strong> In connection with a merger, acquisition, or sale of assets
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>6. Your Rights and Choices</h2>
+            <p>You have the following rights regarding your personal information:</p>
+            <ul>
+                <li><strong>Access:</strong> Request a copy of the personal data we hold about you</li>
+                <li><strong>Correction:</strong> Request correction of inaccurate or incomplete data</li>
+                <li><strong>Deletion:</strong> Request deletion of your account and associated data</li>
+                <li><strong>Data portability:</strong> Request your data in a structured, machine-readable format</li>
+                <li><strong>Opt-out:</strong> Unsubscribe from marketing communications at any time</li>
+            </ul>
+            <p>To exercise these rights, please contact us at the email provided in the Contact section.</p>
+        </section>
+
+        <section>
+            <h2>7. Cookies and Tracking Technologies</h2>
+            <p>We use cookies and similar tracking technologies to:</p>
+            <ul>
+                <li>Maintain your login session</li>
+                <li>Remember your preferences (e.g., dark mode)</li>
+                <li>Analyze usage patterns and improve our service</li>
+            </ul>
+            <p>You can control cookies through your browser settings. However, disabling cookies may limit your ability
+                to use certain features of our service.</p>
+        </section>
+
+        <section>
+            <h2>8. Children's Privacy</h2>
+            <p>Our service is not intended for children under the age of 13. We do not knowingly collect personal
+                information from children under 13. If you are a parent or guardian and believe your child has provided
+                us with personal information, please contact us, and we will delete such information.</p>
+        </section>
+
+        <section>
+            <h2>9. Data Retention</h2>
+            <p>We retain your personal information for as long as your account is active or as needed to provide you
+                services. You may request deletion of your account at any time, after which we will delete your data
+                within 30 days, except where we are required to retain it for legal purposes.</p>
+        </section>
+
+        <section>
+            <h2>10. International Data Transfers</h2>
+            <p>Your information may be transferred to and maintained on servers located outside of your country. We
+                ensure that appropriate safeguards are in place to protect your information in accordance with this
+                Privacy Policy.</p>
+        </section>
+
+        <section>
+            <h2>11. Changes to This Privacy Policy</h2>
+            <p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new
+                Privacy Policy on this page and updating the "Last Updated" date. We encourage you to review this
+                Privacy Policy periodically for any changes.</p>
+        </section>
+
+        <section>
+            <h2>12. Contact Us</h2>
+            <p>If you have any questions about this Privacy Policy or our privacy practices, please contact us at:</p>
+            <p><strong>Email:</strong> privacy@lifelens.app</p>
+            <p><strong>Website:</strong> {{ request.url_root }}</p>
+        </section>
+    </div>
+</div>
+
+<style>
+    .legal-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 0;
+    }
+
+    .legal-page h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-main);
+    }
+
+    .last-updated {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+    }
+
+    .legal-content {
+        background: var(--card-bg);
+        padding: 3rem;
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+    }
+
+    .legal-content section {
+        margin-bottom: 3rem;
+    }
+
+    .legal-content section:last-child {
+        margin-bottom: 0;
+    }
+
+    .legal-content h2 {
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+        color: var(--text-main);
+        border-bottom: 2px solid var(--primary);
+        padding-bottom: 0.5rem;
+    }
+
+    .legal-content h3 {
+        font-size: 1.25rem;
+        margin: 1.5rem 0 0.75rem;
+        color: var(--text-main);
+    }
+
+    .legal-content p {
+        line-height: 1.8;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+    }
+
+    .legal-content ul {
+        margin: 1rem 0 1rem 2rem;
+        line-height: 1.8;
+        color: var(--text-muted);
+    }
+
+    .legal-content li {
+        margin-bottom: 0.5rem;
+    }
+
+    .legal-content strong {
+        color: var(--text-main);
+        font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+        .legal-content {
+            padding: 2rem 1.5rem;
+        }
+
+        .legal-page h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}

@@ -437,6 +437,16 @@ def check_streak_status():
         'needs_notification': not (has_activity_today and has_diary_today)
     })
 
+@app.route('/privacy')
+def privacy():
+    """Privacy Policy page"""
+    return render_template('privacy.html')
+
+@app.route('/terms')
+def terms():
+    """Terms of Service page"""
+    return render_template('terms.html')
+
 @app.route('/history')
 @login_required
 def history():
